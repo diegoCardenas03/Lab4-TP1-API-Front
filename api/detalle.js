@@ -73,6 +73,7 @@ async function cargarNoticia() {
   }
 }
 
+
 // Llama a las funciones al cargar la página
 window.onload = () => {
   cargarEmpresa();
