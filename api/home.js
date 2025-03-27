@@ -20,7 +20,7 @@ async function cargarEmpresa() {
     const empresa = await response.json();
 
     // Completa las secciones de la página con los datos de la empresa
-    document.querySelector('.navbar-brand small').innerHTML = `${empresa.denominacion} <br> Empresa`;
+    document.querySelector('.navbar-brand small').innerHTML = `${empresa.denominacion}`;
 
     // Actualiza el teléfono
     const telefonoElemento = document.querySelector('.help-box a');
@@ -58,37 +58,55 @@ async function cargarNoticias() {
       return;
     }
 
-    // Selecciona todos los elementos existentes en el slider
-    const slides = document.querySelectorAll('#camera > div');
+    // Selecciona el contenedor del slider
+    const slider = document.querySelector('#camera');
 
-    // Itera sobre las noticias y actualiza el contenido de los slides
-    noticias.forEach((noticia, index) => {
-      if (index < slides.length) {
-        const slide = slides[index];
+    if (!slider) {
+      console.error('No se encontró el contenedor del slider.');
+      return;
+    }
 
-        // Actualiza la imagen de fondo
-        slide.setAttribute('data-src', noticia.imagen);
+    // Limpia el contenido actual del slider
+    slider.innerHTML = '';
 
-        // Actualiza el título de la noticia
-        const titulo = slide.querySelector('em > a');
-        if (titulo) {
-          titulo.textContent = noticia.titulo;
-          titulo.href = `detalle.html?id=${noticia.idEmpresa}`;
-        }
+    // Itera sobre las noticias y crea los elementos del slider
+    noticias.forEach((noticia) => {
+      // Crea un nuevo slide
+      const slide = document.createElement('div');
+      slide.setAttribute('data-src', noticia.imagen);
 
-        // Actualiza el resumen de la noticia
-        const resumen = slide.querySelector('.wrap > p');
-        if (resumen) {
-          resumen.textContent = noticia.resumen;
-        }
+      // Crea el contenido del slide
+      slide.innerHTML = `
+        <div class="camera_caption fadeIn">
+          <div class="jumbotron">
+            <em>
+              <a href="detalle.html?id=${noticia.idEmpresa}">${noticia.titulo}</a>
+            </em>
+            <div class="wrap">
+              <p>${noticia.resumen}</p>
+              <a href="detalle.html?id=${noticia.idEmpresa}" class="btn-link fa-angle-right"></a>
+            </div>
+          </div>
+        </div>
+      `;
 
-        // Actualiza el enlace del botón
-        const boton = slide.querySelector('.wrap > a');
-        if (boton) {
-          boton.href = `detalle.html?id=${noticia.idEmpresa}`;
-        }
-      }
+      // Agrega el slide al contenedor del slider
+      slider.appendChild(slide);
     });
+
+    // Reinicia el slider (si usas Camera Slider)
+    if (typeof jQuery !== 'undefined' && jQuery().camera) {
+      jQuery('#camera').camera({
+        height: '50%',
+        loader: 'bar',
+        pagination: true,
+        thumbnails: false,
+        hover: false,
+        playPause: false,
+        navigation: true,
+        fx: 'simpleFade'
+      });
+    }
   } catch (error) {
     console.error('Error al cargar las noticias:', error);
   }
