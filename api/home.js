@@ -71,7 +71,6 @@ async function cargarNoticias() {
 
     // Itera sobre las noticias y crea los elementos del slider
     noticias.forEach((noticia) => {
-      // Crea un nuevo slide
       const slide = document.createElement('div');
       slide.setAttribute('data-src', noticia.imagen);
 
@@ -90,11 +89,9 @@ async function cargarNoticias() {
         </div>
       `;
 
-      // Agrega el slide al contenedor del slider
       slider.appendChild(slide);
     });
 
-    // Reinicia el slider (si usas Camera Slider)
     if (typeof jQuery !== 'undefined' && jQuery().camera) {
       jQuery('#camera').camera({
         height: '50%',
