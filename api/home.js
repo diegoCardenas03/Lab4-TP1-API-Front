@@ -44,16 +44,7 @@ async function cargarEmpresa() {
 // Función para cargar las últimas 5 noticias en el slider
 async function cargarNoticias() {
   try {
-    // Obtén el ID de la empresa desde la URL
-    const idEmpresa = obtenerParametroId();
-
-    if (!idEmpresa) {
-      console.error('No se encontró el ID de la empresa en la URL.');
-      return;
-    }
-
-    // Realiza la solicitud al backend con el ID de la empresa
-    const response = await fetch(`${apiNoticiasUrl}?idEmpresa=${idEmpresa}`);
+    const response = await fetch(apiNoticiasUrl);
     if (!response.ok) {
       throw new Error('Error al obtener las noticias');
     }
@@ -63,7 +54,7 @@ async function cargarNoticias() {
     console.log('Noticias obtenidas:', noticias);
 
     if (noticias.length === 0) {
-      console.warn('No hay noticias relacionadas con esta empresa.');
+      console.warn('El array de noticias está vacío.');
       return;
     }
 
@@ -101,7 +92,6 @@ async function cargarNoticias() {
       slider.appendChild(slide);
     });
 
-    // Reinicia el slider (si usas Camera Slider)
     if (typeof jQuery !== 'undefined' && jQuery().camera) {
       jQuery('#camera').camera({
         height: '50%',
