@@ -25,6 +25,7 @@ document.getElementById('registrarEmpresa').addEventListener('click', async () =
         if (response.ok) {
             alert('Empresa registrada con éxito');
             form.reset();
+            window.location.href = `admin.html`;
         } else {
             alert('Error al registrar la empresa');
         }

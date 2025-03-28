@@ -32,8 +32,10 @@
       <label for="fechaPublicacion">Fecha de Publicación:</label>
       <input type="date" id="fechaPublicacion" name="fechaPublicacion" />
 
-      <label for="idEmpresa">ID de la Empresa:</label>
-      <input type="number" id="idEmpresa" name="idEmpresa" placeholder="Ingrese el ID de la empresa" required />
+      <label for="idEmpresa">Empresa:</label>
+      <select id="idEmpresa" name="idEmpresa" required>
+        <option value="" disabled selected>Seleccione una empresa</option>
+      </select>
 
       <button type="submit">Guardar Noticia</button>
     </form>

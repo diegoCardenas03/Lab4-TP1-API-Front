@@ -72,12 +72,15 @@ async function cargarNoticias() {
       const slide = document.createElement('div');
       slide.setAttribute('data-src', noticia.imagen);
 
+      const fechaPublicacion = new Date(noticia.fechaPublicacion).toLocaleDateString();
+
       slide.innerHTML = `
         <div class="camera_caption fadeIn">
           <div class="jumbotron">
             <em>
               <a href="detalle.html?id=${noticia.id}">${noticia.titulo}</a>
             </em>
+            <p><small>Publicado el: ${fechaPublicacion}</small></p>
             <div class="wrap">
               <p>${noticia.resumen}</p>
               <a href="detalle.html?id=${noticia.id}" class="btn-link fa-angle-right"></a>
