@@ -1,16 +1,13 @@
-// URL del endpoint del backend
 const apiEmpresaUrl = 'http://localhost:8080/api/empresas/';
 const apiNoticiasUrl = 'http://localhost:8080/api/noticias';
 
-// Función para obtener el parámetro "id" de la URL
 function obtenerParametroId() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('id'); // Devuelve el valor del parámetro "id"
+  return params.get('id');
 }
 
-// Función para cargar los datos de la empresa
 async function cargarEmpresa() {
-  const id = obtenerParametroId(); // Obtén el ID de la URL
+  const id = obtenerParametroId();
   console.log('id: ', id);
   try {
     const response = await fetch(`${apiEmpresaUrl}${id}`);
@@ -19,32 +16,25 @@ async function cargarEmpresa() {
     }
     const empresa = await response.json();
 
-    // Completa las secciones de la página con los datos de la empresa
     document.querySelector('.navbar-brand small').innerHTML = `${empresa.denominacion}`;
 
-    // Actualiza el teléfono
     const telefonoElemento = document.querySelector('.help-box a');
     telefonoElemento.textContent = empresa.telefono;
     telefonoElemento.href = `callto:${empresa.telefono}`;
 
-    // Actualiza el horario
     const horarioElemento = document.querySelector('.help-box small');
     horarioElemento.innerHTML = `<span>Horario:</span> ${empresa.horarioDeAtencion}`;
 
-    // Sección "Quienes Somos"
     document.querySelector('section.well2 .col p').textContent = empresa.quienesSomos;
 
-    // Pie de página
     document.querySelector('footer .rights').innerHTML = `${empresa.denominacion} &#169; <span id="copyright-year"></span>`;
   } catch (error) {
     console.error('Error al cargar la empresa:', error);
   }
 }
 
-// Función para cargar las últimas 5 noticias en el slider
 async function cargarNoticias() {
   try {
-    // Obtén el ID de la empresa desde la URL
     const idEmpresa = obtenerParametroId();
 
     if (!idEmpresa) {
@@ -52,7 +42,6 @@ async function cargarNoticias() {
       return;
     }
 
-    // Realiza la solicitud al backend con el ID de la empresa
     const response = await fetch(`${apiNoticiasUrl}?idEmpresa=${idEmpresa}`);
     if (!response.ok) {
       throw new Error('Error al obtener las noticias');
@@ -67,7 +56,6 @@ async function cargarNoticias() {
       return;
     }
 
-    // Selecciona el contenedor del slider
     const slider = document.querySelector('#camera');
 
     if (!slider) {
@@ -75,16 +63,15 @@ async function cargarNoticias() {
       return;
     }
 
-    // Limpia el contenido actual del slider
     slider.innerHTML = '';
 
-    // Itera sobre las noticias y crea los elementos del slider
-        // ...existing code...
-    noticias.forEach((noticia) => {
+    // max 5 noticias
+    const noticiasLimitadas = noticias.slice(0, 5);
+
+    noticiasLimitadas.forEach((noticia) => {
       const slide = document.createElement('div');
       slide.setAttribute('data-src', noticia.imagen);
-    
-      // Crea el contenido del slide
+
       slide.innerHTML = `
         <div class="camera_caption fadeIn">
           <div class="jumbotron">
@@ -98,12 +85,10 @@ async function cargarNoticias() {
           </div>
         </div>
       `;
-    
+
       slider.appendChild(slide);
     });
-    // ...existing code...
 
-    // Reinicia el slider (si usas Camera Slider)
     if (typeof jQuery !== 'undefined' && jQuery().camera) {
       jQuery('#camera').camera({
         height: '50%',
@@ -112,9 +97,11 @@ async function cargarNoticias() {
         thumbnails: false,
         hover: false,
         playPause: false,
-        navigation: true,
+        navigation: noticiasLimitadas.length > 1, // los botones de navegacion solo salen si hay mas de 1 noticia publicada
         fx: 'simpleFade'
       });
+    } else {
+      console.error('El plugin Camera no está disponible.');
     }
   } catch (error) {
     console.error('Error al cargar las noticias:', error);
@@ -123,10 +110,9 @@ async function cargarNoticias() {
 
 async function iniciarMap() {
   try {
-    const id = obtenerParametroId(); // Obtén el ID de la URL
+    const id = obtenerParametroId();
     console.log('ID de la empresa:', id);
 
-    // Realiza la solicitud al backend para obtener los datos de la empresa
     const response = await fetch(`${apiEmpresaUrl}${id}`);
     if (!response.ok) {
       throw new Error('Error al obtener los datos de la empresa');
@@ -135,22 +121,18 @@ async function iniciarMap() {
     const empresa = await response.json();
     console.log('Datos de la empresa para el mapa:', empresa);
 
-    // Obtén las coordenadas de la empresa
     const coord = { lat: parseFloat(empresa.latitud), lng: parseFloat(empresa.longitud) };
 
-    // Inicializa el mapa con las coordenadas de la empresa
     const map = new google.maps.Map(document.getElementById('map'), {
       zoom: 10,
       center: coord
     });
 
-    // Agrega un marcador en las coordenadas de la empresa
     const marker = new google.maps.Marker({
       position: coord,
       map: map
     });
 
-    // Contenido de la ventana de información
     const infoContent = `
         <div class="informacionEmpresa">
             <h3>${empresa.denominacion}</h3>
@@ -160,12 +142,10 @@ async function iniciarMap() {
         </div>
       `;
 
-    // Ventana de información
     const infoWindow = new google.maps.InfoWindow({
       content: infoContent
     });
 
-    // Muestra la ventana de información al hacer clic en el marcador
     marker.addListener("click", function () {
       infoWindow.open(map, marker);
     });
@@ -176,10 +156,9 @@ async function iniciarMap() {
 
 window.iniciarMap = async function () {
   try {
-    const id = obtenerParametroId(); // Obtén el ID de la URL
+    const id = obtenerParametroId();
     console.log('ID de la empresa:', id);
 
-    // Realiza la solicitud al backend para obtener los datos de la empresa
     const response = await fetch(`${apiEmpresaUrl}${id}`);
     if (!response.ok) {
       throw new Error('Error al obtener los datos de la empresa');
@@ -188,22 +167,18 @@ window.iniciarMap = async function () {
     const empresa = await response.json();
     console.log('Datos de la empresa para el mapa:', empresa);
 
-    // Obtén las coordenadas de la empresa
     const coord = { lat: parseFloat(empresa.latitud), lng: parseFloat(empresa.longitud) };
 
-    // Inicializa el mapa con las coordenadas de la empresa
     const map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 15, // Nivel de zoom
-      center: coord // Centra el mapa en las coordenadas de la empresa
+      zoom: 15,
+      center: coord
     });
 
-    // Agrega un marcador en las coordenadas de la empresa
     const marker = new google.maps.Marker({
       position: coord,
       map: map
     });
 
-    // Contenido del cuadro de información (InfoWindow)
     const infoContent = `
       <div class="informacionEmpresa">
           <h3>${empresa.denominacion}</h3>
@@ -213,15 +188,12 @@ window.iniciarMap = async function () {
       </div>
     `;
 
-    // Crea la ventana de información
     const infoWindow = new google.maps.InfoWindow({
       content: infoContent
     });
 
-    // Muestra la ventana de información al cargar el mapa
     infoWindow.open(map, marker);
 
-    // También muestra la ventana de información al hacer clic en el marcador
     marker.addListener("click", function () {
       infoWindow.open(map, marker);
     });
@@ -230,10 +202,8 @@ window.iniciarMap = async function () {
   }
 };
 
-// Llama a las funciones al cargar la página
 window.onload = () => {
   cargarEmpresa();
   cargarNoticias();
   iniciarMap();
-
 };
