@@ -1,4 +1,3 @@
-// Inicializa CKEditor
 CKEDITOR.replace('contenidoHTML');
 
 // Captura el evento submit del formulario
@@ -8,7 +7,6 @@ document.getElementById("noticia-form").addEventListener("submit", function (e) 
 });
 
 function guardarNoticia() {
-  // Recopilar los datos del formulario o el editor
   const titulo = document.getElementById("titulo").value;
   const resumen = document.getElementById("resumen").value;
   const imagen = document.getElementById("imagen").value;
@@ -17,7 +15,6 @@ function guardarNoticia() {
   const fechaPublicacion = document.getElementById("fechaPublicacion").value;
   const idEmpresa = document.getElementById("idEmpresa").value;
 
-  // Crear el objeto de noticia
   const noticia = {
     titulo: titulo,
     resumen: resumen,
@@ -27,8 +24,7 @@ function guardarNoticia() {
     fechaPublicacion: fechaPublicacion,
     idEmpresa: idEmpresa,
   };
-
-  // Hacer la petición al servidor
+  
   fetch("http://localhost:8080/api/noticias", {
     method: "POST",
     headers: {
