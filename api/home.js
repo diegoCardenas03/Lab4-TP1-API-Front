@@ -79,27 +79,29 @@ async function cargarNoticias() {
     slider.innerHTML = '';
 
     // Itera sobre las noticias y crea los elementos del slider
+        // ...existing code...
     noticias.forEach((noticia) => {
       const slide = document.createElement('div');
       slide.setAttribute('data-src', noticia.imagen);
-
+    
       // Crea el contenido del slide
       slide.innerHTML = `
         <div class="camera_caption fadeIn">
           <div class="jumbotron">
             <em>
-              <a href="detalle.html?id=${noticia.idEmpresa}">${noticia.titulo}</a>
+              <a href="detalle.html?id=${noticia.id}">${noticia.titulo}</a>
             </em>
             <div class="wrap">
               <p>${noticia.resumen}</p>
-              <a href="detalle.html?id=${noticia.idEmpresa}" class="btn-link fa-angle-right"></a>
+              <a href="detalle.html?id=${noticia.id}" class="btn-link fa-angle-right"></a>
             </div>
           </div>
         </div>
       `;
-
+    
       slider.appendChild(slide);
     });
+    // ...existing code...
 
     // Reinicia el slider (si usas Camera Slider)
     if (typeof jQuery !== 'undefined' && jQuery().camera) {
